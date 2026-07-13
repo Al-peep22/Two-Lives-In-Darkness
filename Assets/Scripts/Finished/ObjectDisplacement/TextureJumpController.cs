@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class TextureJumpController : MonoBehaviour
 {
@@ -8,6 +9,15 @@ public class TextureJumpController : MonoBehaviour
     public float snapSpeed = 20f;
 
     private bool shouldSnap = false;
+
+    [System.Serializable]
+    public class EffectObject
+    {
+        public Transform OriginalPlacement;
+        public Transform ActualPlacement;
+    }
+
+    public List<EffectObject> effectObjects = new List<EffectObject>();
 
     void Update()
     {
@@ -39,9 +49,32 @@ public class TextureJumpController : MonoBehaviour
         shouldSnap = true;
     }
 
+    public void SnapSelectedObject(EffectObject obj)
+    {
+        obj.OriginalPlacement.gameObject.SetActive(false);
+        obj.ActualPlacement.gameObject.SetActive(true);
+
+        if (textureObject.GetComponent<Collider>() != null)
+            textureObject.GetComponent<Collider>().enabled = false;
+
+        shouldSnap = true;
+    }
+
     public void HideTexture()
     {
         textureObject.SetActive(false);
         textureObject.transform.position = realCollider.position;
     }
+
+    public void HideAffectedObjects()
+    {
+        foreach (var obj in effectObjects)
+        {
+            obj.OriginalPlacement.gameObject.SetActive(false);
+            obj.ActualPlacement.gameObject.SetActive(false);
+            obj.OriginalPlacement.position = obj.ActualPlacement.position;
+            obj.OriginalPlacement.rotation = obj.ActualPlacement.rotation;
+        }
+    }
+
 }
