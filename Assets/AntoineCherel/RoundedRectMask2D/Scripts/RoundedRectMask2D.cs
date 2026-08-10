@@ -295,7 +295,6 @@ namespace ACRoundedRectMask
                 targetMaterial.SetVector(clipRectRadiiID, Radii);
             }
 
-            Debug.Log("Setting clip rect for " + maskableTarget.name);
         }
 
         private void Initialize()

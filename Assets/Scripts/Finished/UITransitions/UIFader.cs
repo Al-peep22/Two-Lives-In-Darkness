@@ -23,4 +23,14 @@ public class UIFader : MonoBehaviour
 
         group.alpha = targetAlpha;
     }
+    public IEnumerator FadeIn(CanvasGroup group, float duration)
+    {
+        yield return FadeRoutine(group, 1f, duration);
+    }
+
+    public IEnumerator FadeOut(CanvasGroup group, float duration)
+    {
+        yield return FadeRoutine(group, 0f, duration);
+    }
+
 }

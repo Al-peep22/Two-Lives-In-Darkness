@@ -1,5 +1,6 @@
-using UnityEngine;
+using System;
 using TMPro;
+using UnityEngine;
 
 public class UIPlayerChoices : MonoBehaviour
 {
@@ -28,17 +29,25 @@ public class UIPlayerChoices : MonoBehaviour
                 options[i].root.SetActive(false);
             }
         }
-        SetSelectedOption(0); // default to first option
+
+        if (newTexts.Length == 0)
+        {
+            for (int i = 0; i < options.Length; i++)
+                options[i].selectedBox.SetActive(false);
+
+            return;
+        }
     }
 
     // Highlight one option
     public void SetSelectedOption(int index)
     {
+        index = Mathf.Clamp(index, 0, options.Length - 1);
+
         for (int i = 0; i < options.Length; i++)
-        {
             options[i].selectedBox.SetActive(i == index);
-        }
     }
+
 
     public string GetSelectedOptionText(int index = 0)
     {
@@ -48,5 +57,13 @@ public class UIPlayerChoices : MonoBehaviour
             return txt.text;
         }
         return null;
+    }
+
+    public int countActiveOptions() {
+        int count = 0;
+        foreach (OptionUI option in options) { 
+            if(option.root.activeSelf) { count++; }
+        }
+        return count;
     }
 }
