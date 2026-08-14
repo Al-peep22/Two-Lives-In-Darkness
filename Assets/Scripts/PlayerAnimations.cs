@@ -52,17 +52,20 @@ public class PlayerAnimations : MonoBehaviour
         movement.movementEnabled = false;
         cam.enableMovement = false;
         cutSceneInProcess = true;
-        switchOptionsActive(false);
+        switchOptionsActive();
 
         animator.SetBool("isWaken", true);
         StartCoroutine(WakeUpRoutine());
     }
 
-    public void switchOptionsActive(bool isOn) {
-        if (((StoryManager.instance.getProgress() || cutSceneInProcess) && !isOn) || (((!StoryManager.instance.getProgress() && !cutSceneInProcess) && isOn)))
-        {
-            UIManager.Instance.gamePanel.transform.Find("OptionUI").gameObject.SetActive(isOn);
+    public void switchOptionsActive() {
+        bool isOn;
+        if (StoryManager.instance.getProgress() || cutSceneInProcess){
+            isOn = false;
+        } else { 
+            isOn = true;
         }
+        UIManager.Instance.gamePanel.transform.Find("OptionUI").gameObject.SetActive(isOn);
     }
 
     private IEnumerator WakeUpRoutine()
@@ -124,9 +127,9 @@ public class PlayerAnimations : MonoBehaviour
         {
             isDayOne = false;
             UIManager.Instance.AddTask("Feed Kesi");
+            cutSceneInProcess = false;
+            switchOptionsActive();
         }
-        cutSceneInProcess = false;
-        switchOptionsActive(true);
     }
 
     public IEnumerator SittingDownCafe() {

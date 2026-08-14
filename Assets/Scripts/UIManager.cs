@@ -71,7 +71,12 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         gamePanel.transform.Find("TasksUI").gameObject.SetActive(taskBar.text != "");
-        gamePanel.transform.Find("OptionUI").gameObject.SetActive(playerChoices.countActiveOptions() != 0);
+        if (playerChoices.countActiveOptions() != 0)
+        {
+           PlayerAnimations.Instance.switchOptionsActive();
+        } else {
+           gamePanel.transform.Find("OptionUI").gameObject.SetActive(false);
+        }
 
         RefreshOptions(player.forward, player.position);
 
@@ -227,7 +232,9 @@ public class UIManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("Pressed 'E'");
-            OnOptionConfirmed(selectedIndex);
+            if(gamePanel.transform.Find("OptionUI").gameObject.activeSelf) { 
+                OnOptionConfirmed(selectedIndex); 
+            }
         }
     }
 

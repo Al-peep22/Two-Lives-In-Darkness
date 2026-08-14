@@ -60,7 +60,7 @@ public class StoryManager : MonoBehaviour
     public void openingScene()
     {
         cutSceneInProcess = true;
-        PlayerAnimations.Instance.switchOptionsActive(false);
+        PlayerAnimations.Instance.switchOptionsActive();
         StartCoroutine(OpeningSceneRoutine());
     }
 
@@ -105,26 +105,26 @@ public class StoryManager : MonoBehaviour
         yield return StartCoroutine(CatHungerSceneRoutine());
 
         cutSceneInProcess = false;
-        PlayerAnimations.Instance.switchOptionsActive(true);
+        PlayerAnimations.Instance.switchOptionsActive();
     }
 
     public void HandlePlayerChoice(string text)
     {
-        if (text != "") {
-            cutSceneInProcess = true;
-            PlayerAnimations.Instance.switchOptionsActive(false);
-        }
         if (text == "Refill Bowls") {
+            cutSceneInProcess = false;
             SFXManager.instance.PlaySFXClip(fillBowl, scene2Bowls, 1f);
             UIManager.Instance.RemoveTask("Feed Kesi");
             StartCoroutine(FeedingSceneRoutine());
             currentScene = "";
             Debug.Log("Removed Task (Feed Kesi)");
         } else if (text == "catHunger") {
+            cutSceneInProcess = false;
             StartCoroutine(CatHungerSceneRoutine());
         } else if (text == "cafeEnter1") {
+            cutSceneInProcess = true;
             StartCoroutine(cafeFirstConvo());
         }
+        PlayerAnimations.Instance.switchOptionsActive();
     }
     private IEnumerator FeedingSceneRoutine() {
         yield return new WaitForSeconds(fillBowl.clip.length);
@@ -132,8 +132,6 @@ public class StoryManager : MonoBehaviour
         GameObject cat = Instantiate(catStanding, scene2Bowls.position, scene2Bowls.rotation);
         yield return new WaitForSeconds(catEating.clip.length);
         Destroy(cat);
-        cutSceneInProcess = false;
-        PlayerAnimations.Instance.switchOptionsActive(true);
     }
     private IEnumerator CatHungerSceneRoutine() {
         yield return new WaitForSeconds(2f);
@@ -146,8 +144,6 @@ public class StoryManager : MonoBehaviour
         if (currentScene == "catHunger") {
             HandlePlayerChoice(currentScene);
         }
-        cutSceneInProcess = false;
-        PlayerAnimations.Instance.switchOptionsActive(true);
     }
 
     private IEnumerator cafeFirstConvo() {
@@ -156,6 +152,6 @@ public class StoryManager : MonoBehaviour
         //then person come up to player and say hello and take their regular order and small talk triggers
         yield return new WaitForSeconds(2f);
         cutSceneInProcess = false;
-        PlayerAnimations.Instance.switchOptionsActive(true);
+        PlayerAnimations.Instance.switchOptionsActive();
     }
 }
